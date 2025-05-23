@@ -13,7 +13,7 @@ import { RuntimeContext } from '@mastra/core/di';
 
 import { ChatProps } from '@/types';
 import { createMastraClient } from '@/lib/mastra-client';
-import { Message } from '@ai-sdk/ui-utils';
+
 import { CoreMessage } from '@mastra/core';
 import { fileToBase64 } from '@/lib/file';
 
