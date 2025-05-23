@@ -103,6 +103,7 @@ const Composer: FC<{ hasMemory?: boolean }> = ({ hasMemory }) => {
           ></textarea>
         </ComposerPrimitive.Input>
         <div className="flex justify-end">
+          <SpeechInput />
           <ComposerAction />
         </div>
 
@@ -121,7 +122,7 @@ const Composer: FC<{ hasMemory?: boolean }> = ({ hasMemory }) => {
   );
 };
 
-const ComposerAction: FC = () => {
+const SpeechInput = () => {
   const composerRuntime = useComposerRuntime();
   const { start, stop, isListening, transcript, error } = useSpeechRecognition();
 
@@ -132,16 +133,21 @@ const ComposerAction: FC = () => {
   }, [composerRuntime, transcript]);
 
   return (
-    <>
-      <TooltipIconButton
-        tooltip="Start speech recognition"
-        variant="ghost"
-        className="rounded-full"
-        onClick={() => (isListening ? stop() : start())}
-      >
-        {isListening ? <CircleStopIcon /> : <Mic className="h-6 w-6 text-[#898989] hover:text-[#fff]" />}
-      </TooltipIconButton>
+    <TooltipIconButton
+      type="button"
+      tooltip={isListening ? 'Stop speech recognition' : 'Start speech recognition'}
+      variant="ghost"
+      className="rounded-full"
+      onClick={() => (isListening ? stop() : start())}
+    >
+      {isListening ? <CircleStopIcon /> : <Mic className="h-6 w-6 text-[#898989] hover:text-[#fff]" />}
+    </TooltipIconButton>
+  );
+};
 
+const ComposerAction: FC = () => {
+  return (
+    <>
       <ComposerPrimitive.AddAttachment asChild>
         <TooltipIconButton tooltip="Add attachment" variant="ghost" className="rounded-full">
           <PlusIcon className="h-6 w-6 text-[#898989] hover:text-[#fff]" />
