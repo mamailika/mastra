@@ -1,11 +1,11 @@
 import {
-  AssistantActionBar,
   ComposerPrimitive,
   MessagePrimitive,
   ThreadPrimitive,
   ToolCallContentPartComponent,
+  useComposerRuntime,
 } from '@assistant-ui/react';
-import { ArrowUp, Mic, Mic2Icon, PlusIcon, StopCircle } from 'lucide-react';
+import { ArrowUp, Mic, PlusIcon } from 'lucide-react';
 import type { FC } from 'react';
 
 import { TooltipIconButton } from '@/components/assistant-ui/tooltip-icon-button';
@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button';
 
 import { AssistantMessage } from './assistant-message';
 import { UserMessage } from './user-message';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useAutoscroll } from '@/hooks/use-autoscroll';
 import { Txt } from '@/ds/components/Txt';
 import { Icon, InfoIcon } from '@/ds/icons';
@@ -119,13 +119,25 @@ const Composer: FC<{ hasMemory?: boolean }> = ({ hasMemory }) => {
 };
 
 const ComposerAction: FC = () => {
+  const composerRuntime = useComposerRuntime();
   const { start, stop, isListening, transcript, error } = useSpeechRecognition();
 
-  console.log('lol', transcript);
+  useEffect(() => {
+    if (!transcript) return;
+
+    composerRuntime.setText(transcript);
+  }, [composerRuntime, transcript]);
 
   return (
     <>
-      <AssistantActionBar.SpeechControl />
+      <TooltipIconButton
+        tooltip="Start speech recognition"
+        variant="ghost"
+        className="rounded-full"
+        onClick={() => (isListening ? stop() : start())}
+      >
+        {isListening ? <CircleStopIcon /> : <Mic className="h-6 w-6 text-[#898989] hover:text-[#fff]" />}
+      </TooltipIconButton>
 
       <ComposerPrimitive.AddAttachment asChild>
         <TooltipIconButton tooltip="Add attachment" variant="ghost" className="rounded-full">
