@@ -19,6 +19,7 @@ import { useAutoscroll } from '@/hooks/use-autoscroll';
 import { Txt } from '@/ds/components/Txt';
 import { Icon, InfoIcon } from '@/ds/icons';
 import { useSpeechRecognition } from '@/hooks/use-speech-recognition';
+import { ComposerAttachments } from './attachment';
 
 export interface ThreadProps {
   ToolFallback?: ToolCallContentPartComponent;
@@ -104,6 +105,8 @@ const Composer: FC<{ hasMemory?: boolean }> = ({ hasMemory }) => {
         <div className="flex justify-end">
           <ComposerAction />
         </div>
+
+        <ComposerAttachments />
       </ComposerPrimitive.Root>
 
       {!hasMemory && (
