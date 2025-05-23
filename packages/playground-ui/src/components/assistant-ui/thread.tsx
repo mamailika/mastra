@@ -1,10 +1,11 @@
 import {
+  AssistantActionBar,
   ComposerPrimitive,
   MessagePrimitive,
   ThreadPrimitive,
   ToolCallContentPartComponent,
 } from '@assistant-ui/react';
-import { ArrowUp } from 'lucide-react';
+import { ArrowUp, Mic, Mic2Icon, PlusIcon, StopCircle } from 'lucide-react';
 import type { FC } from 'react';
 
 import { TooltipIconButton } from '@/components/assistant-ui/tooltip-icon-button';
@@ -17,6 +18,7 @@ import { useRef } from 'react';
 import { useAutoscroll } from '@/hooks/use-autoscroll';
 import { Txt } from '@/ds/components/Txt';
 import { Icon, InfoIcon } from '@/ds/icons';
+import { useSpeechRecognition } from '@/hooks/use-speech-recognition';
 
 export interface ThreadProps {
   ToolFallback?: ToolCallContentPartComponent;
@@ -117,8 +119,20 @@ const Composer: FC<{ hasMemory?: boolean }> = ({ hasMemory }) => {
 };
 
 const ComposerAction: FC = () => {
+  const { start, stop, isListening, transcript, error } = useSpeechRecognition();
+
+  console.log('lol', transcript);
+
   return (
     <>
+      <AssistantActionBar.SpeechControl />
+
+      <ComposerPrimitive.AddAttachment asChild>
+        <TooltipIconButton tooltip="Add attachment" variant="ghost" className="rounded-full">
+          <PlusIcon className="h-6 w-6 text-[#898989] hover:text-[#fff]" />
+        </TooltipIconButton>
+      </ComposerPrimitive.AddAttachment>
+
       <ThreadPrimitive.If running={false}>
         <ComposerPrimitive.Send asChild>
           <TooltipIconButton

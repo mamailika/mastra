@@ -5,6 +5,7 @@ import {
   ThreadMessageLike,
   AppendMessage,
   AssistantRuntimeProvider,
+  WebSpeechSynthesisAdapter,
 } from '@assistant-ui/react';
 import { useState, ReactNode, useEffect } from 'react';
 import { RuntimeContext } from '@mastra/core/di';
