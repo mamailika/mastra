@@ -62,7 +62,8 @@ export class DefaultExecutionEngine extends ExecutionEngine {
         eventTimestamp: Date.now(),
       });
 
-      base.error = error instanceof Error ? error : (lastOutput.error ?? new Error('Unknown error: ' + error));
+      base.error =
+        error instanceof Error ? (error?.stack ?? error) : (lastOutput.error ?? new Error('Unknown error: ' + error));
     } else if (lastOutput.status === 'suspended') {
       const suspendedStepIds = Object.entries(stepResults).flatMap(([stepId, stepResult]) => {
         if (stepResult?.status === 'suspended') {
@@ -333,7 +334,7 @@ export class DefaultExecutionEngine extends ExecutionEngine {
         this.logger.error('Error executing step: ' + ((e as Error)?.stack ?? e));
         execResults = {
           status: 'failed',
-          error: e instanceof Error ? e : new Error('Unknown error: ' + e),
+          error: e instanceof Error ? (e?.stack ?? e) : new Error('Unknown error: ' + e),
           endedAt: Date.now(),
         };
       }
