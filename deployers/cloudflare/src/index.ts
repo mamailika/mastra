@@ -11,18 +11,6 @@ interface CFRoute {
   custom_domain?: boolean;
 }
 
-interface D1DatabaseBinding {
-  binding: string;
-  database_name: string;
-  database_id: string;
-  preview_database_id?: string;
-}
-
-interface KVNamespaceBinding {
-  binding: string;
-  id: string;
-}
-
 export class CloudflareDeployer extends Deployer {
   private cloudflare: Cloudflare | undefined;
   routes?: CFRoute[] = [];
@@ -30,8 +18,6 @@ export class CloudflareDeployer extends Deployer {
   scope: string;
   env?: Record<string, any>;
   projectName?: string;
-  d1Databases?: D1DatabaseBinding[];
-  kvNamespaces?: KVNamespaceBinding[];
 
   constructor({
     scope,
@@ -40,8 +26,6 @@ export class CloudflareDeployer extends Deployer {
     routes,
     workerNamespace,
     auth,
-    d1Databases,
-    kvNamespaces,
   }: {
     env?: Record<string, any>;
     scope: string;
@@ -52,8 +36,6 @@ export class CloudflareDeployer extends Deployer {
       apiToken: string;
       apiEmail?: string;
     };
-    d1Databases?: D1DatabaseBinding[];
-    kvNamespaces?: KVNamespaceBinding[];
   }) {
     super({ name: 'CLOUDFLARE' });
 
@@ -65,9 +47,6 @@ export class CloudflareDeployer extends Deployer {
     if (env) {
       this.env = env;
     }
-
-    if (d1Databases) this.d1Databases = d1Databases;
-    if (kvNamespaces) this.kvNamespaces = kvNamespaces;
 
     this.cloudflare = new Cloudflare(auth);
   }
@@ -95,12 +74,6 @@ export class CloudflareDeployer extends Deployer {
       wranglerConfig.routes = this.routes;
     }
 
-    if (this.d1Databases?.length) {
-      wranglerConfig.d1_databases = this.d1Databases;
-    }
-    if (this.kvNamespaces?.length) {
-      wranglerConfig.kv_namespaces = this.kvNamespaces;
-    }
     await writeFile(join(outputDirectory, this.outputDir, 'wrangler.json'), JSON.stringify(wranglerConfig));
   }
 
